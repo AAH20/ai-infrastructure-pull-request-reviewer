@@ -1,0 +1,23 @@
+{
+  "evidence_class": "simulated",
+  "plan": {
+    "changes": [{"resource": "azurerm_private_dns_zone_virtual_network_link.checkout", "action": "create"}],
+    "dependencies": [
+      {"from": "azurerm_private_dns_zone_virtual_network_link.checkout", "to": "azurerm_private_endpoint.checkout"},
+      {"from": "azurerm_private_endpoint.checkout", "to": "kubernetes_service.checkout"}
+    ],
+    "business_services": [{"resource": "kubernetes_service.checkout", "name": "Customer Checkout API"}],
+    "rollback": {"steps": ["delete virtual network link", "verify previous DNS resolution"]}
+  },
+  "business_context": {"revenue_per_hour_usd": 18000, "modeled_outage_hours": 1, "maximum_monthly_cost_increase_usd": 100},
+  "checkov": {"failed_checks": []},
+  "infracost": {"monthly_cost_delta_usd": 12, "source": "synthetic Infracost-compatible fixture"},
+  "changebench": {
+    "receipt": "sha256:synthetic-changebench-receipt",
+    "checks": [
+      {"check_id": "private-resolution", "dimension": "correctness", "passed": true, "message": "Private resolution validated"},
+      {"check_id": "mutation-boundary", "dimension": "safety", "passed": true, "message": "Mutation boundary preserved"}
+    ]
+  }
+}
+

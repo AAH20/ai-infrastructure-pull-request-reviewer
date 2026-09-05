@@ -1,0 +1,22 @@
+{
+  "evidence_class": "simulated",
+  "plan": {
+    "changes": [{"resource": "azurerm_network_security_rule.management", "action": "update"}],
+    "dependencies": [
+      {"from": "azurerm_network_security_rule.management", "to": "azurerm_subnet.application"},
+      {"from": "azurerm_subnet.application", "to": "kubernetes_service.checkout"}
+    ],
+    "business_services": [{"resource": "kubernetes_service.checkout", "name": "Customer Checkout API"}],
+    "rollback": {"steps": []}
+  },
+  "business_context": {"revenue_per_hour_usd": 18000, "modeled_outage_hours": 2, "maximum_monthly_cost_increase_usd": 100},
+  "checkov": {
+    "failed_checks": [{"check_id": "CKV_AZURE_10", "severity": "high", "name": "Management port exposed to a broad source", "resource": "azurerm_network_security_rule.management", "file": "main.tf:44"}]
+  },
+  "infracost": {"monthly_cost_delta_usd": 184, "source": "synthetic Infracost-compatible fixture"},
+  "changebench": {
+    "receipt": "sha256:synthetic-changebench-receipt",
+    "checks": [{"check_id": "mutation-boundary", "dimension": "safety", "passed": false, "message": "Source-prefix expansion exceeded the approved boundary"}]
+  }
+}
+

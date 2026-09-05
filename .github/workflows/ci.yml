@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: infra-pr-review examples/azure-private-link-safe.json --output safe-review.md
+      - run: infra-pr-review examples/azure-network-risky.json --output risky-review.md --fail-on never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-reviews
+          path: "*-review.md"
+

@@ -1,0 +1,20 @@
+name: AI Infrastructure Pull Request Reviewer
+description: Review normalized cloud, Kubernetes, network and IaC evidence for safety, cost, reliability and business impact
+inputs:
+  bundle:
+    description: Normalized JSON review bundle
+    required: true
+  output:
+    description: Markdown report destination
+    default: infra-pr-review.md
+  fail-on:
+    description: block, review, or never
+    default: block
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: python -m pip install "${{ github.action_path }}"
+    - shell: bash
+      run: infra-pr-review "${{ inputs.bundle }}" --output "${{ inputs.output }}" --fail-on "${{ inputs.fail-on }}"
+
